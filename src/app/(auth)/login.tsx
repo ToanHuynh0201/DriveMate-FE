@@ -117,17 +117,18 @@ export default function LoginScreen() {
 						<Text style={styles.buttonText}>Đăng nhập</Text>
 					)}
 				</TouchableOpacity>
-
-				<Link
-					href="/(auth)/register"
-					asChild>
-					<TouchableOpacity style={styles.linkRow}>
-						<Text style={styles.linkText}>Chưa có tài khoản? </Text>
-						<Text style={[styles.linkText, styles.linkBold]}>
-							Đăng ký
-						</Text>
-					</TouchableOpacity>
-				</Link>
+				<View style={styles.registerView}>
+					<Text style={styles.linkText}>Chưa có tài khoản? </Text>
+					<Link
+						href="/(auth)/register"
+						asChild>
+						<TouchableOpacity style={styles.linkRow}>
+							<Text style={[styles.linkText, styles.linkBold]}>
+								Đăng ký
+							</Text>
+						</TouchableOpacity>
+					</Link>
+				</View>
 			</View>
 		</KeyboardAvoidingView>
 	);
@@ -198,6 +199,11 @@ const styles = StyleSheet.create({
 		color: AUTH_UI.colors.accentText,
 		fontSize: 15,
 		fontWeight: "700",
+	},
+	registerView: {
+		flexDirection: "row",
+		justifyContent: "center",
+		gap: 2,
 	},
 	linkRow: { flexDirection: "row", justifyContent: "center" },
 	linkText: { fontSize: 13, color: AUTH_UI.colors.textSecondary },
