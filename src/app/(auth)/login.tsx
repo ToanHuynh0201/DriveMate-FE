@@ -124,7 +124,7 @@ export default function LoginScreen() {
 						asChild>
 						<TouchableOpacity style={styles.linkRow}>
 							<Text style={[styles.linkText, styles.linkBold]}>
-								Đăng ký
+								Liên hệ admin nhé!
 							</Text>
 						</TouchableOpacity>
 					</Link>

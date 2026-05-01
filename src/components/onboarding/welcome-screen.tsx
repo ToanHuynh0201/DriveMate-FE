@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+	Dimensions,
 	Pressable,
 	StyleSheet,
 	Text,
@@ -14,6 +15,8 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type WelcomeScreenProps = {
@@ -71,16 +74,9 @@ export function WelcomeScreen({
 		});
 	}, [step, entry]);
 
-	const animatedTopStyle = useAnimatedStyle(() => ({
-		opacity: interpolate(entry.value, [0, 1], [0.6, 1]),
-		transform: [{ scale: interpolate(entry.value, [0, 1], [0.98, 1]) }],
-	}));
-
-	const animatedBottomStyle = useAnimatedStyle(() => ({
-		opacity: entry.value,
+	const animatedSlideStyle = useAnimatedStyle(() => ({
 		transform: [
-			{ translateY: interpolate(entry.value, [0, 1], [22, 0]) },
-			{ scale: interpolate(entry.value, [0, 1], [0.985, 1]) },
+			{ translateX: interpolate(entry.value, [0, 1], [SCREEN_WIDTH, 0]) },
 		],
 	}));
 
@@ -93,7 +89,7 @@ export function WelcomeScreen({
 					style={[
 						styles.topSection,
 						{ backgroundColor },
-						animatedTopStyle,
+						animatedSlideStyle,
 					]}>
 					<View
 						style={[
@@ -115,10 +111,13 @@ export function WelcomeScreen({
 					</View>
 				</Animated.View>
 
-				<Animated.View
-					style={[styles.bottomSection, animatedBottomStyle]}>
-					<Text style={styles.title}>{title}</Text>
-					<Text style={styles.description}>{description}</Text>
+				<View style={styles.bottomSection}>
+					<Animated.Text style={[styles.title, animatedSlideStyle]}>
+						{title}
+					</Animated.Text>
+					<Animated.Text style={[styles.description, animatedSlideStyle]}>
+						{description}
+					</Animated.Text>
 
 					<View style={styles.pagination}>
 						<PaginationDot isActive={step === 1} />
@@ -140,7 +139,7 @@ export function WelcomeScreen({
 							<Text style={styles.nextText}>{buttonLabel}</Text>
 						</TouchableOpacity>
 					</View>
-				</Animated.View>
+				</View>
 			</View>
 		</SafeAreaView>
 	);
