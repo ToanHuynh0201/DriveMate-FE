@@ -51,6 +51,10 @@ export default function RootLayout() {
 				name="exam-take"
 				options={{ headerShown: false }}
 			/>
+			<Stack.Screen
+				name="notifications"
+				options={{ headerShown: false }}
+			/>
 		</Stack>
 	);
 }

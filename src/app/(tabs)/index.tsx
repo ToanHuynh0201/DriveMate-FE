@@ -1,6 +1,7 @@
 import { ScreenWrapper } from "@/components/screen-wrapper";
 import { AUTH_UI } from "@/constants/auth-ui";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -54,6 +55,7 @@ const recentTests = [
 ];
 
 export default function Home() {
+	const router = useRouter();
 	return (
 		<ScreenWrapper
 			backgroundColor={AUTH_UI.colors.background}
@@ -69,7 +71,9 @@ export default function Home() {
 						<Text style={styles.hello}>Xin chào 🔥</Text>
 						<Text style={styles.name}>Nguyễn Văn An</Text>
 					</View>
-					<TouchableOpacity style={styles.bell}>
+					<TouchableOpacity
+						style={styles.bell}
+						onPress={() => router.push("/notifications")}>
 						<Ionicons
 							name="notifications-outline"
 							size={20}
