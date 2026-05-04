@@ -1,8 +1,13 @@
 import { ScreenWrapper } from "@/components/screen-wrapper";
+import { Button } from "@/components/common/Button";
+import { Divider } from "@/components/common/Divider";
+import { InfoRow } from "@/components/profile/InfoRow";
+import { MenuRow } from "@/components/profile/MenuRow";
+import { StatCard } from "@/components/profile/StatCard";
+import { ToggleRow } from "@/components/profile/ToggleRow";
 import { AUTH_UI } from "@/constants/auth-ui";
-import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Me() {
 	const [notif, setNotif] = useState(true);
@@ -14,17 +19,14 @@ export default function Me() {
 			scroll={true}
 			edges={["top", "bottom"]}>
 			<View style={styles.container}>
-				{/* Header card */}
 				<View style={styles.headerCard}>
 					<View style={styles.headerLeft}>
 						<View style={styles.avatar}>
 							<Text style={styles.avatarText}>NA</Text>
 						</View>
-						<View style={{ marginLeft: 12, flex: 1 }}>
+						<View style={styles.headerInfo}>
 							<Text style={styles.fullName}>Nguyễn Văn An</Text>
-							<Text style={styles.email}>
-								nguyenvanan@email.com
-							</Text>
+							<Text style={styles.email}>nguyenvanan@email.com</Text>
 						</View>
 					</View>
 
@@ -38,248 +40,65 @@ export default function Me() {
 					</View>
 				</View>
 
-				{/* Info card */}
 				<View style={styles.infoCard}>
-					<InfoRow
-						icon="call-outline"
-						label="Số điện thoại"
-						value="0901 234 567"
-					/>
-					<View style={styles.divider} />
-					<InfoRow
-						icon="calendar-outline"
-						label="Ngày sinh"
-						value="15/03/1998"
-					/>
-					<View style={styles.divider} />
-					<InfoRow
-						icon="mail-outline"
-						label="Email"
-						value="nguyenvanan@email.com"
-					/>
+					<InfoRow icon="call-outline" label="Số điện thoại" value="0901 234 567" />
+					<Divider />
+					<InfoRow icon="calendar-outline" label="Ngày sinh" value="15/03/1998" />
+					<Divider />
+					<InfoRow icon="mail-outline" label="Email" value="nguyenvanan@email.com" />
 				</View>
 
-				{/* Stats boxes */}
 				<View style={styles.statsRow}>
-					<StatCard
-						label="Ngày học"
-						value="42"
-					/>
-					<StatCard
-						label="Bài thi"
-						value="34"
-					/>
-					<StatCard
-						label="Điểm TB"
-						value="87%"
-						color={AUTH_UI.colors.success}
-					/>
+					<StatCard label="Ngày học" value="42" />
+					<StatCard label="Bài thi" value="34" />
+					<StatCard label="Điểm TB" value="87%" color={AUTH_UI.colors.success} />
 				</View>
 
-				{/* Account section */}
 				<Text style={styles.sectionTitle}>Tài khoản</Text>
 				<View style={styles.sectionCard}>
-					<RowToggle
+					<ToggleRow
 						icon="notifications-outline"
 						label="Thông báo"
-						valueBool={notif}
-						onValueChange={setNotif}
+						value={notif}
+						onChange={setNotif}
 					/>
-					<View style={styles.divider} />
-					<RowToggle
+					<Divider />
+					<ToggleRow
 						icon="moon-outline"
 						label="Chế độ tối"
-						valueBool={darkMode}
-						onValueChange={setDarkMode}
+						value={darkMode}
+						onChange={setDarkMode}
 					/>
-					<View style={styles.divider} />
-					<Row
-						icon="globe-outline"
-						label="Ngôn ngữ"
-						value="Tiếng Việt"
-						chevron
-					/>
+					<Divider />
+					<MenuRow icon="globe-outline" label="Ngôn ngữ" value="Tiếng Việt" />
 				</View>
 
-				{/* Course */}
 				<Text style={styles.sectionTitle}>Khóa học</Text>
 				<View style={styles.sectionCard}>
-					<Row
-						icon="ribbon-outline"
-						label="Hạng bằng đang học"
-						value="B1"
-						chevron
-					/>
-					<View style={styles.divider} />
-					<Row
-						icon="star-outline"
-						label="Đánh giá ứng dụng"
-						chevron
-					/>
+					<MenuRow icon="ribbon-outline" label="Hạng bằng đang học" value="B1" />
+					<Divider />
+					<MenuRow icon="star-outline" label="Đánh giá ứng dụng" />
 				</View>
 
-				{/* Support */}
 				<Text style={styles.sectionTitle}>Hỗ trợ</Text>
 				<View style={styles.sectionCard}>
-					<Row
-						icon="help-circle-outline"
-						label="Trung tâm hỗ trợ"
-						chevron
-					/>
-					<View style={styles.divider} />
-					<Row
-						icon="lock-closed-outline"
-						label="Chính sách bảo mật"
-						chevron
-					/>
-					<View style={styles.divider} />
-					<Row
-						icon="document-text-outline"
-						label="Điều khoản sử dụng"
-						chevron
-					/>
+					<MenuRow icon="help-circle-outline" label="Trung tâm hỗ trợ" />
+					<Divider />
+					<MenuRow icon="lock-closed-outline" label="Chính sách bảo mật" />
+					<Divider />
+					<MenuRow icon="document-text-outline" label="Điều khoản sử dụng" />
 				</View>
 
 				<Text style={styles.versionText}>LXePro v1.0.0 • Build 2026.04</Text>
 
-				{/* Logout */}
-				<TouchableOpacity style={styles.logoutBtn}>
-					<Ionicons
-						name="log-out-outline"
-						size={18}
-						color={AUTH_UI.colors.accentText}
-						style={{ marginRight: 8 }}
-					/>
-					<Text style={styles.logoutText}>Đăng xuất</Text>
-				</TouchableOpacity>
+				<Button
+					variant="danger"
+					icon="log-out-outline"
+					label="Đăng xuất"
+					style={styles.logoutBtn}
+				/>
 			</View>
 		</ScreenWrapper>
-	);
-}
-
-function Row({
-	icon,
-	label,
-	value,
-	chevron,
-}: {
-	icon: any;
-	label: string;
-	value?: string;
-	chevron?: boolean;
-}) {
-	return (
-		<TouchableOpacity
-			style={styles.row}
-			activeOpacity={0.8}>
-			<View style={styles.rowLeft}>
-				<View style={styles.rowIconBox}>
-					<Ionicons
-						name={icon}
-						size={18}
-						color={AUTH_UI.colors.accent}
-					/>
-				</View>
-				<View style={{ marginLeft: 10 }}>
-					<Text style={styles.rowLabel}>{label}</Text>
-					{value ? (
-						<Text style={styles.rowValue}>{value}</Text>
-					) : null}
-				</View>
-			</View>
-			{chevron ? (
-				<Ionicons
-					name="chevron-forward"
-					size={18}
-					color={AUTH_UI.colors.textSecondary}
-				/>
-			) : null}
-		</TouchableOpacity>
-	);
-}
-
-function InfoRow({
-	icon,
-	label,
-	value,
-}: {
-	icon: any;
-	label: string;
-	value: string;
-}) {
-	return (
-		<View style={styles.infoRow}>
-			<View style={styles.rowLeft}>
-				<View style={styles.rowIconBox}>
-					<Ionicons
-						name={icon}
-						size={18}
-						color={AUTH_UI.colors.accent}
-					/>
-				</View>
-				<View style={{ marginLeft: 10 }}>
-					<Text style={styles.infoRowLabel}>{label}</Text>
-					<Text style={styles.infoRowValue}>{value}</Text>
-				</View>
-			</View>
-		</View>
-	);
-}
-
-function RowToggle({
-	icon,
-	label,
-	valueBool,
-	onValueChange,
-}: {
-	icon: any;
-	label: string;
-	valueBool: boolean;
-	onValueChange: (v: boolean) => void;
-}) {
-	return (
-		<View style={styles.row}>
-			<View style={styles.rowLeft}>
-				<View style={styles.rowIconBox}>
-					<Ionicons
-						name={icon}
-						size={18}
-						color={AUTH_UI.colors.accent}
-					/>
-				</View>
-				<Text style={[styles.rowLabel, { marginLeft: 10 }]}>
-					{label}
-				</Text>
-			</View>
-			<Switch
-				value={valueBool}
-				onValueChange={onValueChange}
-				thumbColor={valueBool ? AUTH_UI.colors.accentText : undefined}
-				trackColor={{
-					true: AUTH_UI.colors.accent,
-					false: AUTH_UI.colors.surfaceMuted,
-				}}
-			/>
-		</View>
-	);
-}
-
-function StatCard({
-	label,
-	value,
-	color,
-}: {
-	label: string;
-	value: string;
-	color?: string;
-}) {
-	return (
-		<View style={styles.statCard}>
-			<Text style={[styles.statValue, color ? { color } : null]}>
-				{value}
-			</Text>
-			<Text style={styles.statLabel}>{label}</Text>
-		</View>
 	);
 }
 
@@ -290,9 +109,9 @@ const styles = StyleSheet.create({
 		backgroundColor: AUTH_UI.colors.surface,
 		borderRadius: AUTH_UI.radius.xl,
 		padding: 16,
-		overflow: "hidden",
 	},
 	headerLeft: { flexDirection: "row", alignItems: "center" },
+	headerInfo: { marginLeft: 12, flex: 1 },
 	avatar: {
 		width: 64,
 		height: 64,
@@ -330,72 +149,10 @@ const styles = StyleSheet.create({
 
 	infoCard: {
 		backgroundColor: AUTH_UI.colors.surface,
-		borderRadius: 12,
+		borderRadius: AUTH_UI.radius.lg,
 		padding: 12,
 	},
-	infoRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingVertical: 10,
-	},
-	infoRowLabel: {
-		color: AUTH_UI.colors.textSecondary,
-		fontSize: 11,
-	},
-	infoRowValue: {
-		color: AUTH_UI.colors.textPrimary,
-		fontSize: 14,
-		fontWeight: "600",
-		marginTop: 2,
-	},
-
-	divider: {
-		height: 1,
-		backgroundColor: AUTH_UI.colors.border,
-	},
-
-	row: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingVertical: 10,
-	},
-	rowLeft: { flexDirection: "row", alignItems: "center" },
-	rowIconBox: {
-		width: 40,
-		height: 40,
-		borderRadius: 10,
-		backgroundColor: AUTH_UI.colors.surfaceMuted,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	rowLabel: { color: AUTH_UI.colors.textPrimary, fontWeight: "700" },
-	rowValue: {
-		color: AUTH_UI.colors.textSecondary,
-		marginTop: 2,
-		fontSize: 12,
-	},
-
 	statsRow: { flexDirection: "row", gap: 8, marginTop: 6 },
-	statCard: {
-		flex: 1,
-		backgroundColor: AUTH_UI.colors.surface,
-		borderRadius: 12,
-		padding: 12,
-		alignItems: "center",
-	},
-	statValue: {
-		color: AUTH_UI.colors.accent,
-		fontWeight: "900",
-		fontSize: 18,
-	},
-	statLabel: {
-		color: AUTH_UI.colors.textSecondary,
-		fontSize: 12,
-		marginTop: 6,
-	},
-
 	sectionTitle: {
 		textTransform: "uppercase",
 		fontSize: 11,
@@ -407,25 +164,16 @@ const styles = StyleSheet.create({
 	},
 	sectionCard: {
 		backgroundColor: AUTH_UI.colors.surface,
-		borderRadius: 12,
+		borderRadius: AUTH_UI.radius.lg,
 		padding: 8,
 	},
-
 	versionText: {
 		color: AUTH_UI.colors.textMuted,
 		fontSize: 11,
 		textAlign: "center",
 		marginTop: 8,
 	},
-
 	logoutBtn: {
 		marginTop: 16,
-		backgroundColor: AUTH_UI.colors.danger,
-		paddingVertical: 14,
-		borderRadius: 12,
-		alignItems: "center",
-		flexDirection: "row",
-		justifyContent: "center",
 	},
-	logoutText: { color: AUTH_UI.colors.accentText, fontWeight: "800" },
 });

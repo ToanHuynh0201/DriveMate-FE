@@ -1,3 +1,7 @@
+import { Badge } from "@/components/common/Badge";
+import { Button } from "@/components/common/Button";
+import { StatBox } from "@/components/common/StatBox";
+import { OptionCard } from "@/components/exam/OptionCard";
 import { AUTH_UI } from "@/constants/auth-ui";
 import { MOCK_EXAMS } from "@/data/exams.mock";
 import { Ionicons } from "@expo/vector-icons";
@@ -170,9 +174,12 @@ export default function ExamTakeScreen() {
 			<SafeAreaView style={styles.container}>
 				<View style={styles.errorCenter}>
 					<Text style={styles.errorText}>Không tìm thấy đề thi</Text>
-					<TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-						<Text style={styles.backButtonText}>Quay lại</Text>
-					</TouchableOpacity>
+					<Button
+						variant="secondary"
+						label="Quay lại"
+						onPress={() => router.back()}
+						style={styles.backButton}
+					/>
 				</View>
 			</SafeAreaView>
 		);
@@ -189,16 +196,12 @@ export default function ExamTakeScreen() {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			{/* Header */}
 			<View style={styles.header}>
-				<TouchableOpacity style={styles.iconBtn} onPress={handleBack}>
-					<Ionicons name="arrow-back" size={20} color={AUTH_UI.colors.textPrimary} />
-				</TouchableOpacity>
+				<Button variant="icon" icon="arrow-back" onPress={handleBack} />
 
 				<TouchableOpacity
 					style={[styles.timerBadge, isTimeLow && styles.timerBadgeLow]}
-					activeOpacity={1}
-				>
+					activeOpacity={1}>
 					<Ionicons
 						name="timer-outline"
 						size={16}
@@ -209,118 +212,67 @@ export default function ExamTakeScreen() {
 					</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity
-					style={styles.iconBtn}
+				<Button
+					variant="icon"
+					icon={isFlagged ? "flag" : "flag-outline"}
 					onPress={() => handleToggleFlag(currentQuestionIndex)}
-				>
-					<Ionicons
-						name={isFlagged ? "flag" : "flag-outline"}
-						size={20}
-						color={isFlagged ? AUTH_UI.colors.accent : AUTH_UI.colors.textSecondary}
-					/>
-				</TouchableOpacity>
+					style={isFlagged ? styles.flaggedBtn : undefined}
+				/>
 
 				<TouchableOpacity
 					style={styles.counterBadge}
-					onPress={() => openSheet(navSheetAnim, setShowNavSheet)}
-				>
+					onPress={() => openSheet(navSheetAnim, setShowNavSheet)}>
 					<Text style={styles.counterText}>
 						{currentQuestionIndex + 1}/{totalQuestions}
 					</Text>
 				</TouchableOpacity>
 			</View>
 
-			{/* Question */}
 			<ScrollView
 				style={styles.scroll}
 				contentContainerStyle={styles.scrollContent}
-				showsVerticalScrollIndicator={false}
-			>
+				showsVerticalScrollIndicator={false}>
 				<Text style={styles.questionLabel}>Câu {currentQuestionIndex + 1}</Text>
 				<Text style={styles.questionText}>{question.questionText}</Text>
 
 				{question.isCritical && (
-					<View style={styles.criticalBadge}>
-						<Text style={styles.criticalBadgeText}>⚡ Câu điểm liệt</Text>
-					</View>
+					<Badge text="⚡ Câu điểm liệt" variant="critical" style={styles.criticalBadge} />
 				)}
 
 				<View style={styles.optionsList}>
-					{question.options.map((opt, i) => {
-						const isSelected = selectedOption === i;
-						return (
-							<TouchableOpacity
-								key={i}
-								style={[styles.option, isSelected && styles.optionSelected]}
-								onPress={() => handleAnswerSelect(currentQuestionIndex, i)}
-								activeOpacity={0.7}
-							>
-								<View
-									style={[
-										styles.optionBadge,
-										isSelected && styles.optionBadgeSelected,
-									]}
-								>
-									<Text
-										style={[
-											styles.optionBadgeText,
-											isSelected && styles.optionBadgeTextSelected,
-										]}
-									>
-										{String.fromCharCode(65 + i)}
-									</Text>
-								</View>
-								<Text
-									style={[
-										styles.optionText,
-										isSelected && styles.optionTextSelected,
-									]}
-								>
-									{opt}
-								</Text>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
-			</ScrollView>
-
-			{/* Bottom Navigation */}
-			<View style={styles.bottomNav}>
-				<TouchableOpacity
-					style={[
-						styles.navArrow,
-						currentQuestionIndex === 0 && styles.navArrowDisabled,
-					]}
-					onPress={handlePrev}
-					disabled={currentQuestionIndex === 0}
-				>
-					<Ionicons
-						name="chevron-back"
-						size={22}
-						color={
-							currentQuestionIndex === 0
-								? AUTH_UI.colors.disabled
-								: AUTH_UI.colors.textPrimary
-						}
-					/>
-				</TouchableOpacity>
-
-				<View style={styles.dots}>
-					{Array.from({ length: totalGroups }).map((_, i) => (
-						<View
+					{question.options.map((opt, i) => (
+						<OptionCard
 							key={i}
-							style={[styles.dot, i === currentGroup && styles.dotActive]}
+							letter={String.fromCharCode(65 + i)}
+							text={opt}
+							state={selectedOption === i ? "selected" : "default"}
+							onPress={() => handleAnswerSelect(currentQuestionIndex, i)}
 						/>
 					))}
 				</View>
+			</ScrollView>
 
-				<TouchableOpacity style={styles.navArrow} onPress={handleNext}>
-					<Ionicons
-						name="chevron-forward"
-						size={22}
-						color={AUTH_UI.colors.textPrimary}
-					/>
-				</TouchableOpacity>
+			<View style={styles.bottomNav}>
+				<Button
+					variant="icon"
+					icon="chevron-back"
+					onPress={handlePrev}
+					disabled={currentQuestionIndex === 0}
+					style={styles.navArrow}
+				/>
+
+				<View style={styles.dots}>
+					{Array.from({ length: totalGroups }).map((_, i) => (
+						<View key={i} style={[styles.dot, i === currentGroup && styles.dotActive]} />
+					))}
+				</View>
+
+				<Button
+					variant="icon"
+					icon="chevron-forward"
+					onPress={handleNext}
+					style={styles.navArrow}
+				/>
 			</View>
 
 			{/* Question Navigation Sheet */}
@@ -328,13 +280,11 @@ export default function ExamTakeScreen() {
 				visible={showNavSheet}
 				transparent
 				animationType="none"
-				onRequestClose={() => closeSheet(navSheetAnim, setShowNavSheet)}
-			>
+				onRequestClose={() => closeSheet(navSheetAnim, setShowNavSheet)}>
 				<TouchableOpacity
 					style={styles.overlay}
 					activeOpacity={1}
-					onPress={() => closeSheet(navSheetAnim, setShowNavSheet)}
-				>
+					onPress={() => closeSheet(navSheetAnim, setShowNavSheet)}>
 					<Animated.View
 						style={[
 							styles.sheet,
@@ -348,8 +298,7 @@ export default function ExamTakeScreen() {
 									},
 								],
 							},
-						]}
-					>
+						]}>
 						<TouchableOpacity activeOpacity={1}>
 							<View style={styles.sheetHandle} />
 							<Text style={styles.sheetTitle}>Điều hướng câu hỏi</Text>
@@ -379,8 +328,7 @@ export default function ExamTakeScreen() {
 												closeSheet(navSheetAnim, setShowNavSheet, () =>
 													setCurrentQuestionIndex(idx),
 												)
-											}
-										>
+											}>
 											<Text style={[styles.navGridText, { color: textColor }]}>
 												{idx + 1}
 											</Text>
@@ -413,13 +361,11 @@ export default function ExamTakeScreen() {
 				visible={showSubmitSheet}
 				transparent
 				animationType="none"
-				onRequestClose={() => closeSheet(submitSheetAnim, setShowSubmitSheet)}
-			>
+				onRequestClose={() => closeSheet(submitSheetAnim, setShowSubmitSheet)}>
 				<TouchableOpacity
 					style={styles.overlay}
 					activeOpacity={1}
-					onPress={() => closeSheet(submitSheetAnim, setShowSubmitSheet)}
-				>
+					onPress={() => closeSheet(submitSheetAnim, setShowSubmitSheet)}>
 					<Animated.View
 						style={[
 							styles.sheet,
@@ -433,8 +379,7 @@ export default function ExamTakeScreen() {
 									},
 								],
 							},
-						]}
-					>
+						]}>
 						<TouchableOpacity activeOpacity={1}>
 							<View style={styles.sheetHandle} />
 							<Text style={styles.submitTitle}>Nộp bài?</Text>
@@ -443,47 +388,28 @@ export default function ExamTakeScreen() {
 							</Text>
 
 							<View style={styles.submitStats}>
-								<View style={[styles.statBox, { backgroundColor: "#1B4332" }]}>
-									<Text style={[styles.statNumber, { color: AUTH_UI.colors.success }]}>
-										{answeredCount}
-									</Text>
-									<Text style={[styles.statLabel, { color: AUTH_UI.colors.success }]}>
-										Đã làm
-									</Text>
-								</View>
-								<View style={[styles.statBox, { backgroundColor: "#3B0F0F" }]}>
-									<Text style={[styles.statNumber, { color: AUTH_UI.colors.danger }]}>
-										{totalQuestions - answeredCount}
-									</Text>
-									<Text style={[styles.statLabel, { color: AUTH_UI.colors.danger }]}>
-										Bỏ qua
-									</Text>
-								</View>
-								<View style={[styles.statBox, { backgroundColor: "#3D2E00" }]}>
-									<Text style={[styles.statNumber, { color: "#C9A227" }]}>
-										{flaggedQuestions.length}
-									</Text>
-									<Text style={[styles.statLabel, { color: "#C9A227" }]}>
-										Gắn cờ
-									</Text>
-								</View>
+								<StatBox value={answeredCount} label="Đã làm" bg="#1B4332" valueColor={AUTH_UI.colors.success} labelColor={AUTH_UI.colors.success} />
+								<StatBox value={totalQuestions - answeredCount} label="Bỏ qua" bg="#3B0F0F" valueColor={AUTH_UI.colors.danger} labelColor={AUTH_UI.colors.danger} />
+								<StatBox value={flaggedQuestions.length} label="Gắn cờ" bg="#3D2E00" valueColor="#C9A227" labelColor="#C9A227" />
 							</View>
 
 							<View style={styles.submitActions}>
-								<TouchableOpacity
-									style={styles.cancelBtn}
+								<Button
+									variant="secondary"
+									label="Làm tiếp"
+									flex
 									onPress={() => closeSheet(submitSheetAnim, setShowSubmitSheet)}
-								>
-									<Text style={styles.cancelBtnText}>Làm tiếp</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									style={styles.submitBtn}
+									style={styles.submitActionBtn}
+								/>
+								<Button
+									variant="primary"
+									label="✓ Nộp bài"
+									flex
 									onPress={() =>
 										closeSheet(submitSheetAnim, setShowSubmitSheet, handleSubmit)
 									}
-								>
-									<Text style={styles.submitBtnText}>✓ Nộp bài</Text>
-								</TouchableOpacity>
+									style={styles.submitActionBtn}
+								/>
 							</View>
 						</TouchableOpacity>
 					</Animated.View>
@@ -504,14 +430,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 10,
 		gap: 10,
-	},
-	iconBtn: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
-		backgroundColor: AUTH_UI.colors.surface,
-		alignItems: "center",
-		justifyContent: "center",
 	},
 	timerBadge: {
 		flex: 1,
@@ -537,6 +455,9 @@ const styles = StyleSheet.create({
 	timerTextLow: {
 		color: AUTH_UI.colors.danger,
 	},
+	flaggedBtn: {
+		backgroundColor: "rgba(243,201,66,0.15)",
+	},
 	counterBadge: {
 		backgroundColor: AUTH_UI.colors.surface,
 		borderRadius: AUTH_UI.radius.lg,
@@ -550,9 +471,7 @@ const styles = StyleSheet.create({
 		fontWeight: "600",
 		color: AUTH_UI.colors.textPrimary,
 	},
-	scroll: {
-		flex: 1,
-	},
+	scroll: { flex: 1 },
 	scrollContent: {
 		paddingHorizontal: 16,
 		paddingTop: 12,
@@ -574,64 +493,10 @@ const styles = StyleSheet.create({
 	},
 	criticalBadge: {
 		alignSelf: "flex-start",
-		backgroundColor: "rgba(248,113,113,0.15)",
-		borderRadius: 20,
-		paddingHorizontal: 10,
-		paddingVertical: 4,
-		borderWidth: 1,
-		borderColor: "rgba(248,113,113,0.3)",
-	},
-	criticalBadgeText: {
-		fontSize: 12,
-		fontWeight: "600",
-		color: AUTH_UI.colors.danger,
 	},
 	optionsList: {
 		gap: 10,
 		marginTop: 4,
-	},
-	option: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 12,
-		backgroundColor: AUTH_UI.colors.surface,
-		borderRadius: AUTH_UI.radius.xl,
-		padding: 14,
-		borderWidth: 1.5,
-		borderColor: "transparent",
-	},
-	optionSelected: {
-		borderColor: AUTH_UI.colors.accent,
-		backgroundColor: "rgba(243,201,66,0.08)",
-	},
-	optionBadge: {
-		width: 32,
-		height: 32,
-		borderRadius: 16,
-		backgroundColor: AUTH_UI.colors.surfaceMuted,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	optionBadgeSelected: {
-		backgroundColor: AUTH_UI.colors.accent,
-	},
-	optionBadgeText: {
-		fontSize: 13,
-		fontWeight: "700",
-		color: AUTH_UI.colors.textSecondary,
-	},
-	optionBadgeTextSelected: {
-		color: AUTH_UI.colors.accentText,
-	},
-	optionText: {
-		flex: 1,
-		fontSize: 14,
-		color: AUTH_UI.colors.textSecondary,
-		lineHeight: 20,
-	},
-	optionTextSelected: {
-		color: AUTH_UI.colors.textPrimary,
-		fontWeight: "500",
 	},
 	bottomNav: {
 		flexDirection: "row",
@@ -646,12 +511,6 @@ const styles = StyleSheet.create({
 		width: 40,
 		height: 40,
 		borderRadius: 20,
-		backgroundColor: AUTH_UI.colors.surface,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	navArrowDisabled: {
-		opacity: 0.4,
 	},
 	dots: {
 		flexDirection: "row",
@@ -750,48 +609,12 @@ const styles = StyleSheet.create({
 		gap: 10,
 		marginBottom: 20,
 	},
-	statBox: {
-		flex: 1,
-		borderRadius: AUTH_UI.radius.xl,
-		padding: 14,
-		alignItems: "center",
-		gap: 4,
-	},
-	statNumber: {
-		fontSize: 22,
-		fontWeight: "700",
-	},
-	statLabel: {
-		fontSize: 12,
-		fontWeight: "500",
-	},
 	submitActions: {
 		flexDirection: "row",
 		gap: 10,
 	},
-	cancelBtn: {
-		flex: 1,
-		borderRadius: AUTH_UI.radius.xl,
-		paddingVertical: 14,
-		alignItems: "center",
-		backgroundColor: AUTH_UI.colors.surfaceMuted,
-	},
-	cancelBtnText: {
-		fontSize: 15,
-		fontWeight: "600",
-		color: AUTH_UI.colors.textPrimary,
-	},
-	submitBtn: {
-		flex: 1,
-		borderRadius: AUTH_UI.radius.xl,
-		paddingVertical: 14,
-		alignItems: "center",
-		backgroundColor: AUTH_UI.colors.accent,
-	},
-	submitBtnText: {
-		fontSize: 15,
-		fontWeight: "700",
-		color: AUTH_UI.colors.accentText,
+	submitActionBtn: {
+		height: 50,
 	},
 	errorCenter: {
 		flex: 1,
@@ -805,15 +628,5 @@ const styles = StyleSheet.create({
 	},
 	backButton: {
 		paddingHorizontal: 24,
-		paddingVertical: 10,
-		backgroundColor: AUTH_UI.colors.surface,
-		borderRadius: AUTH_UI.radius.lg,
-		borderWidth: 1,
-		borderColor: AUTH_UI.colors.border,
-	},
-	backButtonText: {
-		fontSize: 14,
-		fontWeight: "600",
-		color: AUTH_UI.colors.textPrimary,
 	},
 });

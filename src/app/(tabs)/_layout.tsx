@@ -26,7 +26,11 @@ export default function TabsLayout() {
 					headerShown: false,
 					title: "Trang chủ",
 					tabBarIcon: ({ color }) => (
-						<Ionicons name="home" size={20} color={color} />
+						<Ionicons
+							name="home"
+							size={20}
+							color={color}
+						/>
 					),
 				}}
 			/>
@@ -38,17 +42,10 @@ export default function TabsLayout() {
 					title: "Đề thi",
 					tabBarIcon: ({ color }) => (
 						<View style={{ position: "relative" }}>
-							<Ionicons name="document-text" size={20} color={color} />
-							<View
-								style={{
-									position: "absolute",
-									top: -2,
-									right: -4,
-									width: 8,
-									height: 8,
-									borderRadius: 4,
-									backgroundColor: AUTH_UI.colors.accent,
-								}}
+							<Ionicons
+								name="document-text"
+								size={20}
+								color={color}
 							/>
 						</View>
 					),
@@ -61,7 +58,11 @@ export default function TabsLayout() {
 					headerShown: false,
 					title: "Luyện tập",
 					tabBarIcon: ({ color }) => (
-						<Ionicons name="map-outline" size={20} color={color} />
+						<Ionicons
+							name="map-outline"
+							size={20}
+							color={color}
+						/>
 					),
 				}}
 			/>
@@ -72,7 +73,11 @@ export default function TabsLayout() {
 					headerShown: false,
 					title: "Lịch sử",
 					tabBarIcon: ({ color }) => (
-						<Ionicons name="time-outline" size={20} color={color} />
+						<Ionicons
+							name="time-outline"
+							size={20}
+							color={color}
+						/>
 					),
 				}}
 			/>
@@ -83,7 +88,11 @@ export default function TabsLayout() {
 					headerShown: false,
 					title: "Tôi",
 					tabBarIcon: ({ color }) => (
-						<Ionicons name="person-outline" size={20} color={color} />
+						<Ionicons
+							name="person-outline"
+							size={20}
+							color={color}
+						/>
 					),
 				}}
 			/>

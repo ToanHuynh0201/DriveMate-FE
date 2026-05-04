@@ -1,3 +1,8 @@
+import { ScreenWrapper } from "@/components/screen-wrapper";
+import { Button } from "@/components/common/Button";
+import { InputField } from "@/components/common/InputField";
+import { StepProgressBar } from "@/components/ui/StepProgressBar";
+import { AUTH_LAYOUT, AUTH_UI } from "@/constants/auth-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -10,8 +15,6 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-
-import { ScreenWrapper } from "@/components/screen-wrapper";
 import Animated, {
 	Easing,
 	interpolate,
@@ -19,9 +22,6 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-
-import { StepProgressBar } from "@/components/ui/StepProgressBar";
-import { AUTH_LAYOUT, AUTH_UI } from "@/constants/auth-ui";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,21 +40,17 @@ function checkPasswordRules(password: string) {
 export default function ForgotPasswordScreen() {
 	const [step, setStep] = useState(1);
 
-	// Step 1
 	const [email, setEmail] = useState("");
 
-	// Step 2
 	const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
 	const [secondsLeft, setSecondsLeft] = useState(OTP_SECONDS);
 	const otpRefs = useRef<Array<TextInput | null>>([]);
 
-	// Step 3
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-	// Slide animation
 	const entry = useSharedValue(0);
 
 	useEffect(() => {
@@ -71,7 +67,6 @@ export default function ForgotPasswordScreen() {
 		],
 	}));
 
-	// OTP countdown
 	useEffect(() => {
 		if (step !== 2 || secondsLeft <= 0) return;
 		const timer = setInterval(() => {
@@ -90,7 +85,6 @@ export default function ForgotPasswordScreen() {
 		}
 	};
 
-	// Step 1
 	const emailError = useMemo(() => {
 		if (!email) return "";
 		return EMAIL_REGEX.test(email.trim()) ? "" : "Email không hợp lệ";
@@ -105,7 +99,6 @@ export default function ForgotPasswordScreen() {
 		goToStep(2);
 	};
 
-	// Step 2
 	const otpCode = otp.join("");
 	const isOtpDisabled = otpCode.length < OTP_LENGTH;
 	const resendLabel = useMemo(() => {
@@ -136,11 +129,9 @@ export default function ForgotPasswordScreen() {
 		otpRefs.current[0]?.focus();
 	};
 
-	// Step 3
 	const rules = useMemo(() => checkPasswordRules(password), [password]);
 	const isRulePassed = Object.values(rules).every(Boolean);
-	const isConfirmMatched =
-		confirmPassword.length > 0 && password === confirmPassword;
+	const isConfirmMatched = confirmPassword.length > 0 && password === confirmPassword;
 	const isPasswordDisabled = !isRulePassed || !isConfirmMatched;
 
 	const handleSubmit = () => {
@@ -155,9 +146,7 @@ export default function ForgotPasswordScreen() {
 			<Ionicons
 				name={isPassed ? "checkmark-circle" : "ellipse-outline"}
 				size={14}
-				color={
-					isPassed ? AUTH_UI.colors.success : AUTH_UI.colors.textMuted
-				}
+				color={isPassed ? AUTH_UI.colors.success : AUTH_UI.colors.textMuted}
 			/>
 			<Text style={[styles.ruleText, isPassed && styles.ruleTextPassed]}>
 				{label}
@@ -168,19 +157,14 @@ export default function ForgotPasswordScreen() {
 	const titles = ["Quên mật khẩu", "Quên mật khẩu", "Tạo mật khẩu mới"];
 
 	return (
-		<ScreenWrapper
-			backgroundColor={AUTH_UI.colors.background}
-			keyboard>
+		<ScreenWrapper backgroundColor={AUTH_UI.colors.background} keyboard>
 			<View style={styles.content}>
-				<TouchableOpacity
+				<Button
+					variant="icon"
+					icon="arrow-back"
+					onPress={handleBack}
 					style={styles.backButton}
-					onPress={handleBack}>
-					<Ionicons
-						name="arrow-back"
-						size={18}
-						color={AUTH_UI.colors.textPrimary}
-					/>
-				</TouchableOpacity>
+				/>
 
 				<StepProgressBar currentStep={step} />
 
@@ -189,47 +173,27 @@ export default function ForgotPasswordScreen() {
 
 					{step === 1 && (
 						<>
-							<Text style={styles.subtitle}>
-								Nhập email để nhận mã OTP
-							</Text>
+							<Text style={styles.subtitle}>Nhập email để nhận mã OTP</Text>
 
-							<View style={styles.inputRow}>
-								<Ionicons
-									name="mail-outline"
-									size={18}
-									color={AUTH_UI.colors.textMuted}
-								/>
-								<TextInput
-									style={[styles.input, styles.inputWithIcon]}
-									value={email}
-									onChangeText={setEmail}
-									autoCapitalize="none"
-									keyboardType="email-address"
-									placeholder="Email của bạn"
-									placeholderTextColor={
-										AUTH_UI.colors.textMuted
-									}
-								/>
-							</View>
+							<InputField
+								leftIcon="mail-outline"
+								value={email}
+								onChangeText={setEmail}
+								autoCapitalize="none"
+								keyboardType="email-address"
+								placeholder="Email của bạn"
+							/>
 
 							{!!emailError && (
-								<Text style={styles.errorText}>
-									{emailError}
-								</Text>
+								<Text style={styles.errorText}>{emailError}</Text>
 							)}
 
-							<TouchableOpacity
-								style={[
-									styles.primaryButton,
-									isEmailDisabled &&
-										styles.primaryButtonDisabled,
-								]}
+							<Button
+								variant="primary"
+								label="Gửi mã OTP"
 								onPress={handleSendOtp}
-								disabled={isEmailDisabled}>
-								<Text style={styles.primaryButtonText}>
-									Gửi mã OTP
-								</Text>
-							</TouchableOpacity>
+								disabled={isEmailDisabled}
+							/>
 						</>
 					)}
 
@@ -254,14 +218,9 @@ export default function ForgotPasswordScreen() {
 										value={digit}
 										keyboardType="number-pad"
 										maxLength={1}
-										onChangeText={(val) =>
-											handleOtpChange(val, index)
-										}
+										onChangeText={(val) => handleOtpChange(val, index)}
 										onKeyPress={({ nativeEvent }) =>
-											handleOtpKeyPress(
-												nativeEvent.key,
-												index,
-											)
+											handleOtpKeyPress(nativeEvent.key, index)
 										}
 										selectionColor={AUTH_UI.colors.accent}
 									/>
@@ -275,121 +234,59 @@ export default function ForgotPasswordScreen() {
 								<Text
 									style={[
 										styles.resendText,
-										secondsLeft > 0 &&
-											styles.resendTextDisabled,
+										secondsLeft > 0 && styles.resendTextDisabled,
 									]}>
 									{resendLabel}
 								</Text>
 							</TouchableOpacity>
 
-							<TouchableOpacity
-								style={[
-									styles.primaryButton,
-									isOtpDisabled &&
-										styles.primaryButtonDisabled,
-								]}
+							<Button
+								variant="primary"
+								label="Xác nhận"
 								onPress={() => goToStep(3)}
-								disabled={isOtpDisabled}>
-								<Text style={styles.primaryButtonText}>
-									Xác nhận
-								</Text>
-							</TouchableOpacity>
+								disabled={isOtpDisabled}
+							/>
 						</>
 					)}
 
 					{step === 3 && (
 						<>
 							<Text style={styles.subtitle}>
-								Nhập mật khẩu mới cho{" "}
-								{email || "tài khoản của bạn"}
+								Nhập mật khẩu mới cho {email || "tài khoản của bạn"}
 							</Text>
 
-							<View style={styles.inputRow}>
-								<TextInput
-									style={styles.input}
-									value={password}
-									onChangeText={setPassword}
-									secureTextEntry={!showPassword}
-									placeholder="Mật khẩu mới"
-									placeholderTextColor={
-										AUTH_UI.colors.textMuted
-									}
-								/>
-								<TouchableOpacity
-									onPress={() =>
-										setShowPassword((prev) => !prev)
-									}>
-									<Ionicons
-										name={
-											showPassword
-												? "eye-off-outline"
-												: "eye-outline"
-										}
-										size={18}
-										color={AUTH_UI.colors.textMuted}
-									/>
-								</TouchableOpacity>
-							</View>
+							<InputField
+								rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
+								onRightPress={() => setShowPassword((p) => !p)}
+								value={password}
+								onChangeText={setPassword}
+								secureTextEntry={!showPassword}
+								placeholder="Mật khẩu mới"
+							/>
 
-							<View style={styles.inputRow}>
-								<TextInput
-									style={styles.input}
-									value={confirmPassword}
-									onChangeText={setConfirmPassword}
-									secureTextEntry={!showConfirmPassword}
-									placeholder="Xác nhận mật khẩu"
-									placeholderTextColor={
-										AUTH_UI.colors.textMuted
-									}
-								/>
-								<TouchableOpacity
-									onPress={() =>
-										setShowConfirmPassword((prev) => !prev)
-									}>
-									<Ionicons
-										name={
-											showConfirmPassword
-												? "eye-off-outline"
-												: "eye-outline"
-										}
-										size={18}
-										color={AUTH_UI.colors.textMuted}
-									/>
-								</TouchableOpacity>
-							</View>
+							<InputField
+								rightIcon={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
+								onRightPress={() => setShowConfirmPassword((p) => !p)}
+								value={confirmPassword}
+								onChangeText={setConfirmPassword}
+								secureTextEntry={!showConfirmPassword}
+								placeholder="Xác nhận mật khẩu"
+							/>
 
 							<View style={styles.rulesBox}>
 								{renderRule(rules.minLength, "Ít nhất 8 ký tự")}
-								{renderRule(
-									rules.upperLower,
-									"Có chữ hoa và chữ thường",
-								)}
-								{renderRule(
-									rules.hasNumber,
-									"Có ít nhất 1 chữ số",
-								)}
-								{renderRule(
-									rules.hasSpecial,
-									"Có ít nhất 1 ký tự đặc biệt",
-								)}
-								{renderRule(
-									isConfirmMatched,
-									"Mật khẩu xác nhận khớp",
-								)}
+								{renderRule(rules.upperLower, "Có chữ hoa và chữ thường")}
+								{renderRule(rules.hasNumber, "Có ít nhất 1 chữ số")}
+								{renderRule(rules.hasSpecial, "Có ít nhất 1 ký tự đặc biệt")}
+								{renderRule(isConfirmMatched, "Mật khẩu xác nhận khớp")}
 							</View>
 
-							<TouchableOpacity
-								style={[
-									styles.primaryButton,
-									isPasswordDisabled &&
-										styles.primaryButtonDisabled,
-								]}
+							<Button
+								variant="primary"
+								label="Đặt lại mật khẩu"
 								onPress={handleSubmit}
-								disabled={isPasswordDisabled}>
-								<Text style={styles.primaryButtonText}>
-									Đặt lại mật khẩu
-								</Text>
-							</TouchableOpacity>
+								disabled={isPasswordDisabled}
+							/>
 						</>
 					)}
 				</Animated.View>
@@ -406,19 +303,12 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	backButton: {
-		width: 34,
-		height: 34,
-		borderRadius: 10,
-		backgroundColor: AUTH_UI.colors.surface,
+		marginBottom: 16,
 		borderWidth: 1,
 		borderColor: AUTH_UI.colors.border,
-		alignItems: "center",
-		justifyContent: "center",
-		marginBottom: 16,
+		borderRadius: 10,
 	},
-	slideContent: {
-		flex: 1,
-	},
+	slideContent: { flex: 1 },
 	title: {
 		color: AUTH_UI.colors.textPrimary,
 		fontSize: 24,
@@ -430,29 +320,11 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		marginBottom: 18,
 	},
-	inputRow: {
-		height: 50,
-		borderRadius: AUTH_UI.radius.lg,
-		borderWidth: 1,
-		borderColor: AUTH_UI.colors.border,
-		backgroundColor: AUTH_UI.colors.surface,
-		flexDirection: "row",
-		alignItems: "center",
-		paddingHorizontal: 14,
-		marginBottom: 10,
-	},
-	input: {
-		flex: 1,
-		color: AUTH_UI.colors.textPrimary,
-		fontSize: 15,
-	},
-	inputWithIcon: {
-		marginLeft: 10,
-	},
 	errorText: {
 		color: AUTH_UI.colors.danger,
 		fontSize: 12,
 		marginBottom: 10,
+		marginTop: -8,
 	},
 	instruction: {
 		color: AUTH_UI.colors.textPrimary,
@@ -509,20 +381,5 @@ const styles = StyleSheet.create({
 	},
 	ruleTextPassed: {
 		color: AUTH_UI.colors.success,
-	},
-	primaryButton: {
-		height: 50,
-		borderRadius: AUTH_UI.radius.lg,
-		backgroundColor: AUTH_UI.colors.accent,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	primaryButtonDisabled: {
-		backgroundColor: AUTH_UI.colors.disabled,
-	},
-	primaryButtonText: {
-		color: AUTH_UI.colors.accentText,
-		fontSize: 15,
-		fontWeight: "700",
 	},
 });
