@@ -7,11 +7,11 @@ import { MOCK_EXAMS } from "@/data/exams.mock";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	Alert,
 	Animated,
 	Modal,
-	SafeAreaView,
 	ScrollView,
 	StyleSheet,
 	Text,

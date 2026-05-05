@@ -35,11 +35,7 @@ export default function ExamResultScreen() {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<ScreenHeader
-				title="Kết Quả Thi"
-				onBack={() => router.back()}
-				centered
-			/>
+			<ScreenHeader title="Kết Quả Thi" onBack={() => router.back()} centered />
 
 			<ScrollView
 				contentContainerStyle={styles.content}
@@ -77,7 +73,11 @@ export default function ExamResultScreen() {
 
 				{isCritical && (
 					<View style={styles.criticalWarning}>
-						<Ionicons name="warning-outline" size={18} color={AUTH_UI.colors.danger} />
+						<Ionicons
+							name="warning-outline"
+							size={18}
+							color={AUTH_UI.colors.danger}
+						/>
 						<View style={styles.criticalWarningText}>
 							<Text style={styles.criticalTitle}>Dính câu điểm liệt!</Text>
 							<Text style={styles.criticalSubtitle}>
@@ -89,10 +89,34 @@ export default function ExamResultScreen() {
 				)}
 
 				<View style={styles.statsRow}>
-					<StatBox value={correctCount} label="Đúng" bg="#1B4332" valueColor={AUTH_UI.colors.success} labelColor={AUTH_UI.colors.success} />
-					<StatBox value={wrongCount} label="Sai" bg="#3B0F0F" valueColor={AUTH_UI.colors.danger} labelColor={AUTH_UI.colors.danger} />
-					<StatBox value={skippedCount} label="Bỏ" bg={AUTH_UI.colors.surfaceMuted} valueColor={AUTH_UI.colors.textSecondary} labelColor={AUTH_UI.colors.textSecondary} />
-					<StatBox value={elapsed ?? "0:00"} label="Thời gian" bg="#2A2200" valueColor="#C9A227" labelColor="#C9A227" />
+					<StatBox
+						value={correctCount}
+						label="Đúng"
+						bg="#1B4332"
+						valueColor={AUTH_UI.colors.success}
+						labelColor={AUTH_UI.colors.success}
+					/>
+					<StatBox
+						value={wrongCount}
+						label="Sai"
+						bg="#3B0F0F"
+						valueColor={AUTH_UI.colors.danger}
+						labelColor={AUTH_UI.colors.danger}
+					/>
+					<StatBox
+						value={skippedCount}
+						label="Bỏ"
+						bg={AUTH_UI.colors.surfaceMuted}
+						valueColor={AUTH_UI.colors.textSecondary}
+						labelColor={AUTH_UI.colors.textSecondary}
+					/>
+					<StatBox
+						value={elapsed ?? "0:00"}
+						label="Thời gian"
+						bg="#2A2200"
+						valueColor="#C9A227"
+						labelColor="#C9A227"
+					/>
 				</View>
 
 				{wrongCount > 0 && (

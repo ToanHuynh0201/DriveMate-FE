@@ -5,7 +5,8 @@ import { AUTH_UI } from "@/constants/auth-ui";
 import { MOCK_EXAMS } from "@/data/exams.mock";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type WrongItem = {
 	questionIndex: number;
