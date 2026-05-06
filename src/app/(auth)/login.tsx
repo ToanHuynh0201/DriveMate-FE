@@ -2,10 +2,13 @@ import { ScreenWrapper } from "@/components/screen-wrapper";
 import { Button } from "@/components/common/Button";
 import { InputField } from "@/components/common/InputField";
 import { AUTH_LAYOUT, AUTH_UI } from "@/constants/auth-ui";
+import { AUTH_MESSAGES } from "@/constants/messages";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginScreen() {
 	const [email, setEmail] = useState("");
@@ -15,6 +18,13 @@ export default function LoginScreen() {
 	const router = useRouter();
 
 	const handleLogin = async () => {
+		if (!email.trim() || !password.trim() || !EMAIL_REGEX.test(email.trim())) {
+			Alert.alert("Thông báo", AUTH_MESSAGES.MSG01);
+			return;
+		}
+		// TODO: gọi authService.login() khi có API
+		// MSG02 – tài khoản bị khóa (BR02)
+		// MSG03 – sai mật khẩu (BR03)
 		router.replace("/(tabs)");
 	};
 
@@ -69,14 +79,10 @@ export default function LoginScreen() {
 				/>
 
 				<View style={styles.registerView}>
-					<Text style={styles.linkText}>Chưa có tài khoản? </Text>
-					<Link href="/(auth)/register" asChild>
-						<TouchableOpacity>
-							<Text style={[styles.linkText, styles.linkBold]}>
-								Liên hệ admin nhé!
-							</Text>
-						</TouchableOpacity>
-					</Link>
+					<Text style={styles.linkText}>
+						Chưa có tài khoản?{" "}
+						<Text style={styles.linkBold}>Liên hệ admin để được hỗ trợ.</Text>
+					</Text>
 				</View>
 			</View>
 		</ScreenWrapper>

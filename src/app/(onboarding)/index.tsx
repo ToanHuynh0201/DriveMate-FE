@@ -14,13 +14,13 @@ const STEPS = [
 		bubbleColor: "#FFF1A4",
 	},
 	{
-		icon: "📚",
-		title: "Luyện thi thông minh",
+		icon: "📊",
+		title: "Theo dõi tiến độ",
 		description:
-			"Hệ thống SRS giúp bạn ghi nhớ câu hỏi quan trọng, tập trung vào điểm yếu cá nhân.",
+			"Xem lịch sử bài thi, tỷ lệ đạt và các điểm yếu cần cải thiện để ôn tập hiệu quả hơn.",
 		buttonLabel: "Tiếp theo →",
-		backgroundColor: "#F2C84D",
-		bubbleColor: "#FFF1A4",
+		backgroundColor: "#3B82F6",
+		bubbleColor: "#93C5FD",
 	},
 	{
 		icon: "🗺️",

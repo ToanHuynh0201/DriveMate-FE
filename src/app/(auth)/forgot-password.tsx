@@ -3,6 +3,7 @@ import { Button } from "@/components/common/Button";
 import { InputField } from "@/components/common/InputField";
 import { StepProgressBar } from "@/components/ui/StepProgressBar";
 import { AUTH_LAYOUT, AUTH_UI } from "@/constants/auth-ui";
+import { AUTH_MESSAGES } from "@/constants/messages";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -87,13 +88,13 @@ export default function ForgotPasswordScreen() {
 
 	const emailError = useMemo(() => {
 		if (!email) return "";
-		return EMAIL_REGEX.test(email.trim()) ? "" : "Email không hợp lệ";
+		return EMAIL_REGEX.test(email.trim()) ? "" : AUTH_MESSAGES.MSG04;
 	}, [email]);
 	const isEmailDisabled = !email.trim() || !!emailError;
 
 	const handleSendOtp = () => {
 		if (isEmailDisabled) {
-			Alert.alert("Thông báo", "Vui lòng nhập email hợp lệ");
+			Alert.alert("Thông báo", AUTH_MESSAGES.MSG04);
 			return;
 		}
 		goToStep(2);

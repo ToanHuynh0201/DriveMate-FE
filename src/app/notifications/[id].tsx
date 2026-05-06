@@ -2,7 +2,7 @@ import { AUTH_UI } from "@/constants/auth-ui";
 import { useNotificationsStore } from "@/store/notifications.store";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	ScrollView,
@@ -12,19 +12,10 @@ import {
 	View,
 } from "react-native";
 
-type FilterTab = "all" | "read" | "unread";
-
-const TABS: { key: FilterTab; label: string }[] = [
-	{ key: "all", label: "Tất cả" },
-	{ key: "read", label: "Đã đọc" },
-	{ key: "unread", label: "Chưa đọc" },
-];
-
 export default function NotificationDetailScreen() {
 	const router = useRouter();
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const { notifications, markAsRead, refresh } = useNotificationsStore();
-	const [activeTab, setActiveTab] = useState<FilterTab>("all");
 
 	const notification = useMemo(
 		() => notifications.find((n) => n.id === id),
@@ -76,27 +67,6 @@ export default function NotificationDetailScreen() {
 				</TouchableOpacity>
 			</View>
 
-			{/* Filter tabs (decorative) */}
-			<View style={styles.tabRow}>
-				{TABS.map((tab) => (
-					<TouchableOpacity
-						key={tab.key}
-						style={[
-							styles.tab,
-							activeTab === tab.key && styles.tabActive,
-						]}
-						onPress={() => setActiveTab(tab.key)}>
-						<Text
-							style={[
-								styles.tabText,
-								activeTab === tab.key && styles.tabTextActive,
-							]}>
-							{tab.label}
-						</Text>
-					</TouchableOpacity>
-				))}
-			</View>
-
 			{/* Detail card */}
 			<ScrollView
 				contentContainerStyle={styles.scrollContent}
@@ -142,26 +112,6 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		marginTop: 2,
 	},
-
-	tabRow: {
-		flexDirection: "row",
-		paddingHorizontal: 16,
-		gap: 8,
-		marginBottom: 8,
-	},
-	tab: {
-		paddingHorizontal: 16,
-		paddingVertical: 8,
-		borderRadius: 20,
-		backgroundColor: AUTH_UI.colors.surfaceMuted,
-	},
-	tabActive: { backgroundColor: AUTH_UI.colors.accent },
-	tabText: {
-		color: AUTH_UI.colors.textSecondary,
-		fontSize: 13,
-		fontWeight: "600",
-	},
-	tabTextActive: { color: AUTH_UI.colors.accentText },
 
 	scrollContent: { paddingHorizontal: 16, paddingBottom: 32 },
 

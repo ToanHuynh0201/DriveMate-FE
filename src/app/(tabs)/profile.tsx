@@ -6,12 +6,21 @@ import { MenuRow } from "@/components/profile/MenuRow";
 import { StatCard } from "@/components/profile/StatCard";
 import { ToggleRow } from "@/components/profile/ToggleRow";
 import { AUTH_UI } from "@/constants/auth-ui";
+import { useAuthStore } from "@/store/auth.store";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Me() {
 	const [notif, setNotif] = useState(true);
 	const [darkMode, setDarkMode] = useState(true);
+	const { logout } = useAuthStore();
+	const router = useRouter();
+
+	const handleLogout = async () => {
+		await logout();
+		router.replace("/(auth)/login");
+	};
 
 	return (
 		<ScreenWrapper
@@ -96,6 +105,7 @@ export default function Me() {
 					icon="log-out-outline"
 					label="Đăng xuất"
 					style={styles.logoutBtn}
+					onPress={handleLogout}
 				/>
 			</View>
 		</ScreenWrapper>

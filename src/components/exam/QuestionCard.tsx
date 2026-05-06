@@ -25,7 +25,7 @@ export function QuestionCard({ question, index, mode = "preview" }: QuestionCard
 
       <View style={styles.optionsList}>
         {question.options.map((opt, i) => {
-          const isCorrect = i === question.correctAnswerIndex;
+          const isCorrect = mode !== "preview" && i === question.correctAnswerIndex;
           return (
             <OptionCard
               key={i}
